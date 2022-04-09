@@ -25,7 +25,7 @@ df = df.drop(cols, axis = 1)
 print(df)
 print(len(df.index))
 options = Options()
-#options.headless = True
+options.headless = True
 driver = webdriver.Chrome(options=options, executable_path=r'.\app\chromedriver.exe')
 driver.get("https://www.wollplatz.de/")
 
@@ -44,7 +44,7 @@ for i in range(len(df.index)):
     elems = driver.find_elements_by_xpath("//a[@href]")
     elem_id = driver.find_element_by_xpath("//div[@class = 'productlistholder productlist25 sqr-resultItem']")
     data_id_val = elem_id.get_attribute("data-id")  # First column of the DB
-    elems = list(set(elems))
+    #elems = list(set(elems))
     value = None
     for elem in elems:
         if link_string_contains in elem.get_attribute("href"): #elem.get_attribute == str()
@@ -63,16 +63,20 @@ for i in range(len(df.index)):
                         break
                 print("second")
                 for elem_table_size in ((elems_table_size.text).splitlines()):
+                    print("third")
                     if("Nadelstärke" in elem_table_size):
                         print("goes in if statement")
                         needle_size = (re.findall(r'\d+',elem_table_size))            
                         needle_size_db =  int(''.join(needle_size)) #4th column of db
-                        print("Needle size: " + needle_size_db)
+                        print("Needle size: " + str(needle_size_db))
+                        print("Composition " + composition_db)
+                        print("Price " + price_db)
+                        
+                print("hata nerde")
                 # I couldn't find delivery time on the site so that I passed None to sql
-                
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
-                cur.execute("INSERT INTO table (`Billets`) VALUES (%s,%s,%s,%s,%s)", (data_id_val,price_db,value,needle_size_db,composition_db))
+                #cur.execute("INSERT INTO table (`Billets`) VALUES (%s,%s,%s,%s,%s)", (data_id_val,price_db,value,needle_size_db,composition_db))
             except:
                 print("Exception Raised")
                 try:
@@ -86,7 +90,6 @@ for i in range(len(df.index)):
                     driver.switch_to.window(driver.window_handles[0])
                 except:
                     print("Failed")
-
             print(price_db)
     time.sleep(5)
     print()
