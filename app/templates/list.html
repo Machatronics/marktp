@@ -1,0 +1,46 @@
+<html Lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content = "width=device-width, initial-scale = 1.0">
+    <title>Document</title>
+    <h1>{{msg}}</h1>
+
+</head>
+<body>
+    <table border="1">
+        <thead>
+            <td> Id </td>
+            <td> Name</td>
+            <td> Army_type</td>
+            <td> Expansion</td>
+        </thead>
+
+        {% for row in rows %}
+
+        <form name="options" action="{{url_for('d_specific')}}"  method="POST">
+
+            <input type="text" name="inputted" value = {{row['id']}} />
+             <select id="options" name="options">
+      id
+    </select>
+
+            <tr>
+            <td>{{row['id']}}</td>
+            <td>{{row['name']}}</td>
+            <td>{{row['army_type']}}</td>
+            <td>{{row['expansion']}} </td>
+            <td><input type="submit" value="press_me" title="Delete" /></td>
+
+        </tr>
+             </form>
+
+
+
+
+        {% endfor %}
+
+    </table>
+        <a href="/"> Go to Home Page </a>
+
+</body>
+</html>

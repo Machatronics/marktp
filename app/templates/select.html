@@ -1,0 +1,22 @@
+<html>
+<body>
+
+<h2>Please select from below to select a column</h2>
+  <form name="options" action="{{url_for('s_specific')}}"  method="POST">
+
+  <label for="options">Choose a Column:</label>
+    <select id="options" name="options">
+      <option value="id">Id</option>
+      <option value="name">Name</option>
+      <option value="army_type">Army_type</option>
+      <option value="expansion">Expansion</option>
+    </select>
+    <br>
+    Please enter the value to be selected:
+    <input type="text" name="inputted"/>
+    <br>
+    <input type="submit">
+  </form>
+
+</body>
+</html>

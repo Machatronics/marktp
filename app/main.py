@@ -14,7 +14,7 @@ conn = sql.connect('database.db')
 cur = conn.cursor()
 cur.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Billets' ''')
 if cur.fetchone()[0]!=1 :
-    cur.execute('''create table if not exists Billets (DataId integer,price integer,delivery_time integer,needle_size integer,composition text)''')
+    cur.execute('''create table if not exists Billets (DataId integer,price float,delivery_time integer,needle_size text,composition text)''')
 conn.commit()
 conn.close()
 
@@ -31,6 +31,7 @@ driver.get("https://www.wollplatz.de/")
 
 conn = sql.connect('database.db')
 cur = conn.cursor()
+sql = 'INSERT INTO Billets (DataId,price,delivery_time,needle_size,composition) VALUES (%s,%s,%s, %s,%s,)'
 
 for i in range(len(df.index)):
     current_url = driver.current_url
@@ -43,7 +44,7 @@ for i in range(len(df.index)):
     time.sleep(3)
     elems = driver.find_elements_by_xpath("//a[@href]")
     elem_id = driver.find_element_by_xpath("//div[@class = 'productlistholder productlist25 sqr-resultItem']")
-    data_id_val = elem_id.get_attribute("data-id")  # First column of the DB
+    data_id_val = int(elem_id.get_attribute("data-id"))  # First column of the DB
     #elems = list(set(elems))
     value = None
     for elem in elems:
@@ -52,6 +53,8 @@ for i in range(len(df.index)):
             driver.switch_to.window(driver.window_handles[1])
             elems_table_size = driver.find_element_by_xpath("//*[@id='pdetailTableSpecs']/table")
             price_db =  driver.find_element_by_class_name("product-price-amount").text   #2nd column of db
+            price_db = price_db.replace(",",".")
+            price_db = float(price_db)
             #cur.execute("INSERT INTO table (`delivery_time`) VALUES (%s)", (price_db,)) # 3th column of the db
 
             try:
@@ -70,13 +73,17 @@ for i in range(len(df.index)):
                         needle_size_db =  int(''.join(needle_size)) #4th column of db
                         print("Needle size: " + str(needle_size_db))
                         print("Composition " + composition_db)
-                        print("Price " + price_db)
+                        print("Price " + str(price_db))
                         
                 print("hata nerde")
                 # I couldn't find delivery time on the site so that I passed None to sql
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
-                #cur.execute("INSERT INTO table (`Billets`) VALUES (%s,%s,%s,%s,%s)", (data_id_val,price_db,value,needle_size_db,composition_db))
+                #val = (data_id_val,price_db,value,needle_size_db,composition_db)
+                cur.execute("INSERT INTO Billets VALUES (:DataId,:price,:delivery_time,:needle_size,:composition)",(data_id_val,price_db,value,needle_size_db,composition_db))
+                #cur.execute(sql,val)
+                conn.commit()
+                break
             except:
                 print("Exception Raised")
                 try:
