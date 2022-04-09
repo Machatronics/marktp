@@ -10,9 +10,10 @@
     <table border="1">
         <thead>
             <td> Id </td>
-            <td> Name</td>
-            <td> Army_type</td>
-            <td> Expansion</td>
+            <td> Price</td>
+            <td> delivery_time </td>
+            <td> needle_size</td>
+            <td> Composition</td>
         </thead>
 
         {% for row in rows %}
@@ -26,10 +27,11 @@
 
             <tr>
             <td>{{row['id']}}</td>
-            <td>{{row['name']}}</td>
-            <td>{{row['army_type']}}</td>
-            <td>{{row['expansion']}} </td>
-            <td><input type="submit" value="press_me" title="Delete" /></td>
+            <td>{{row['price']}}</td>
+            <td>{{row['delivery_time']}}</td>
+            <td>{{row['needle_size']}} </td>
+            <td>{{row['composition']}} </td>
+            <! ---<td><input type="submit" value="press_me" title="Delete" /></td>---> 
 
         </tr>
              </form>

@@ -1,2 +1,2 @@
 import pip
-pip.main(["install", "beautifulsoup4"])
+pip.main(["install", "Flask"])
