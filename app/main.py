@@ -22,10 +22,6 @@ def addrec():
     if request.method == 'POST':
         try:
             with sql.connect('database.db') as con:
-                DataId = request.form['id']
-                price = request.form['name']
-                delivery_time = request.form['delivery_time']
-                needle_size = request.form['needle_size']
                 composition = request.form['composition']
                 if id == "" or composition == "" :
                     msg = "id or composition can't be empty"
@@ -103,46 +99,31 @@ def u_specific():
                 con.row_factory = sql.Row
                 cur = con.cursor()
                 field = request.form.get('options')
-                selected_input = request.form.get('inputted')
-                if field == "id":
-                    if isinstance(selected_input,str):
-                        try:
-                            selected_input = int(selected_input)
-                            msg = "Success"
-
-                        except:
-                            msg = "Id cannot be str"
-                            return render_template('result.html', msg=msg)
-
-                        finally:
-                            cur.execute("SELECT * FROM Billets WHERE DataId = ? ", (selected_input,))
-                            con.close()
-                            rows = cur.fetchall()
-                            return render_template('result.html',rows = rows, msg=msg)
-
-                    cur.execute("SELECT * FROM Billets WHERE DataId = ? ", (selected_input,))
+                id = int(request.form['id'])
                 if field == "price":
-                    cur.execute("SELECT * FROM Billets WHERE price = ? ", (selected_input,))
-                if field == "delivery_time":
-                    cur.execute("SELECT * FROM Billets WHERE delivery_time = ? ", (selected_input,))
-                if field == "needle_size":
-                    cur.execute("SELECT * FROM Billets WHERE needle_size = ? ", (selected_input,))
-                if field == "composition":
-                    cur.execute("SELECT * FROM Billets WHERE composition = ? ", (selected_input,))
-
-                msg = "Successfully selected"
-                rows = cur.fetchall()
+                    price = request.form['inputted']
+                    form_selected = price
+                    cur.execute("UPDATE Billets SET price=? WHERE DataId=?", (form_selected,id))
+                elif field == "delivery_time":
+                    delivery_time = request.form['inputted']
+                    form_selected = delivery_time
+                    cur.execute("UPDATE Billets SET delivery_time=? WHERE DataId=?", (form_selected, id))
+                elif field == "needle_size":
+                    needle_size = request.form['inputted']
+                    form_selected = needle_size
+                    cur.execute("UPDATE Billets SET needle_size=? WHERE DataId=?", (form_selected, id))
+                elif field == "composition":
+                    composition = request.form['inputted']
+                    form_selected = composition
+                    cur.execute("UPDATE Billets SET composition=? WHERE DataId=?", (form_selected, id))
+                con.commit()
+                msg = "Successfully updated."
         except:
+            msg = "Update failed."
             con.rollback()
-            msg = "Failed to select"
-            rows = cur.fetchall()
         finally:
             con.close()
-            try:
-                rows
-            except:
-                rows = []
-            return render_template('list.html', rows = rows , msg=msg)
+            return render_template('result.html', msg=msg)
 @app.route('/s_specify')
 def s_specify():
     return render_template('select.html')

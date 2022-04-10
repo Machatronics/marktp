@@ -20,13 +20,13 @@
 
         <form name="options" action="{{url_for('d_specific')}}"  method="POST">
 
-            <input type="text" name="inputted" value = {{row['id']}} />
+            <input type="text" name="inputted" value = {{row['DataId']}} />
              <select id="options" name="options">
       id
     </select>
 
             <tr>
-            <td>{{row['id']}}</td>
+            <td>{{row['DataId']}}</td>
             <td>{{row['price']}}</td>
             <td>{{row['delivery_time']}}</td>
             <td>{{row['needle_size']}} </td>
