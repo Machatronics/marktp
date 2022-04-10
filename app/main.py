@@ -22,7 +22,7 @@ def addrec():
     if request.method == 'POST':
         try:
             with sql.connect('database.db') as con:
-                id_h = request.form['id']
+                DataId = request.form['id']
                 price = request.form['name']
                 delivery_time = request.form['delivery_time']
                 needle_size = request.form['needle_size']
@@ -64,7 +64,7 @@ def d_specific():
                 if field == "id":
                     id = request.form['inputted']
                     form_selected = int(id)
-                    cur.execute("DELETE FROM Billets WHERE id = ?",(form_selected,))
+                    cur.execute("DELETE FROM Billets WHERE DataId = ?",(form_selected,))
                 elif field == "price":
                     price = request.form['inputted']
                     form_selected = price
@@ -80,7 +80,7 @@ def d_specific():
                 elif field == "composition":
                     composition = request.form['inputted']
                     form_selected = composition
-                    cur.execute("DELETE FROM Billets WHERE composition_db = ?",(form_selected,))
+                    cur.execute("DELETE FROM Billets WHERE composition = ?",(form_selected,))
                 
                 con.commit()
                 msg = "success"
@@ -115,20 +115,20 @@ def u_specific():
                             return render_template('result.html', msg=msg)
 
                         finally:
-                            cur.execute("SELECT * FROM Civilizations WHERE id = ? ", (selected_input,))
+                            cur.execute("SELECT * FROM Billets WHERE DataId = ? ", (selected_input,))
                             con.close()
                             rows = cur.fetchall()
                             return render_template('result.html',rows = rows, msg=msg)
 
-                    cur.execute("SELECT * FROM Civilizations WHERE id = ? ", (selected_input,))
+                    cur.execute("SELECT * FROM Billets WHERE DataId = ? ", (selected_input,))
                 if field == "price":
-                    cur.execute("SELECT * FROM Civilizations WHERE price = ? ", (selected_input,))
+                    cur.execute("SELECT * FROM Billets WHERE price = ? ", (selected_input,))
                 if field == "delivery_time":
-                    cur.execute("SELECT * FROM Civilizations WHERE delivery_time = ? ", (selected_input,))
+                    cur.execute("SELECT * FROM Billets WHERE delivery_time = ? ", (selected_input,))
                 if field == "needle_size":
-                    cur.execute("SELECT * FROM Civilizations WHERE needle_size = ? ", (selected_input,))
+                    cur.execute("SELECT * FROM Billets WHERE needle_size = ? ", (selected_input,))
                 if field == "composition":
-                    cur.execute("SELECT * FROM Civilizations WHERE composition = ? ", (selected_input,))
+                    cur.execute("SELECT * FROM Billets WHERE composition = ? ", (selected_input,))
 
                 msg = "Successfully selected"
                 rows = cur.fetchall()
@@ -157,22 +157,7 @@ def s_specific():
                 field = request.form.get('options')
                 selected_input = request.form.get('inputted')
                 if field == "id":
-                    if isinstance(selected_input,int):
-                        try:
-                            selected_input = int(selected_input)
-                            msg = "Success"
-
-                        except:
-                            msg = "Id cannot be str"
-                            return render_template('result.html', msg=msg)
-
-                        finally:
-                            cur.execute("SELECT * FROM Billets WHERE id = ? ", (selected_input,))
-                            con.close()
-                            rows = cur.fetchall()
-                            return render_template('result.html',rows = rows, msg=msg)
-
-                    cur.execute("SELECT * FROM Billets WHERE id = ? ", (selected_input,))
+                    cur.execute("SELECT * FROM Billets WHERE DataId = ? ", (selected_input,))
                 if field == "price":
                     cur.execute("SELECT * FROM Billets WHERE price = ? ", (selected_input,))
                 if field == "delivery_time":
